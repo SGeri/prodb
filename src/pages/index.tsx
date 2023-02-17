@@ -1,36 +1,68 @@
-import { invoke } from "@tauri-apps/api/tauri";
+import { useState } from "react";
 import { open } from "@tauri-apps/api/shell";
-import Link from "next/link";
-import { Button, Text } from "@mantine/core";
-import { openConfirmModal } from "@mantine/modals";
+import {
+  Button,
+  Center,
+  Container,
+  ContainerProps,
+  List,
+  Loader,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import { openConfirmModal, openModal } from "@mantine/modals";
+import { useDocker } from "@utils";
 
 function App() {
-  const checkDocker = async () => {
-    try {
-      const isDockerInstalled = await invoke("check_docker");
+  const [loading, setLoading] = useState(false);
+  const [dockerReady, setDockerReady] = useState<boolean>(false);
+  const { checkDocker } = useDocker();
 
-      if (isDockerInstalled) {
-        // Docker is installed
-      } else {
-        throw new Error();
-      }
-    } catch (e) {
-      openDockerInstallationModal();
-      console.log("Error:", e);
+  const checkInstallation = async () => {
+    setLoading(true);
+    const { success, version, error } = await checkDocker();
+
+    if (success) {
+      openDockerInstalledModal(version);
+      setDockerReady(true);
+    } else {
+      openDockerInstallationModal(error);
     }
+
+    setLoading(false);
   };
 
-  const openDockerInstallationModal = async () =>
+  const openDockerInstalledModal = (dockerVersion: string) =>
+    openModal({
+      title: "Successfully detected",
+      children: (
+        <Text size="sm">
+          Docker can be found on your machine. <br />
+          Your current Docker version: {dockerVersion}
+        </Text>
+      ),
+    });
+
+  const openDockerInstallationModal = (error: string) =>
     openConfirmModal({
       title: "Install Docker?",
       children: (
         <Text size="sm">
-          Docker cannot be found. Potential reasons: <br />
-          <ul>
-            <li>Docker Daemon is not running.</li>
-            <li>Docker cannot be found in PATH.</li>
-            <li>Docker is not installed.</li>
-          </ul>
+          Docker cannot be found. Potential reasons:
+          <List withPadding>
+            <List.Item>Docker Daemon is not running.</List.Item>
+            <List.Item>Docker cannot be found in PATH.</List.Item>
+            <List.Item>
+              To start development server run npm start command
+            </List.Item>
+            <List.Item>
+              Docker has no exposed TCP port. (expose in settings!)
+            </List.Item>
+            <List.Item>Docker is not installed.</List.Item>
+          </List>
+          <Text fw={700}>Error code:</Text>
+          <Text>{error}</Text>
         </Text>
       ),
       labels: { confirm: "Install Docker", cancel: "Cancel" },
@@ -39,13 +71,62 @@ function App() {
 
   return (
     <div className="container">
-      <Link href="/0">
-        <h1>Irány teszt!</h1>
-      </Link>
+      <Section>
+        <Title order={2} align="center" my="xl">
+          Usage Guide
+        </Title>
 
-      <Button onClick={checkDocker}>Check Docker</Button>
+        <Text mb="md">
+          This is your first time running ProDB. To get started, please follow
+          the steps below to setup your environment and start building your
+          awesome local infrastructure.
+        </Text>
+      </Section>
+
+      <Section>
+        <Title order={3}>Setting up the environment</Title>
+
+        <Text mb="md">
+          Before you could start building infrastructure, we have to make sure,
+          Docker is successfully installed and configured for ProDB, so that it
+          can manage containers using it.
+        </Text>
+      </Section>
+
+      <Section>
+        <Button
+          size="md"
+          mb="md"
+          onClick={checkInstallation}
+          disabled={loading}
+          fullWidth
+        >
+          {loading ? (
+            <Loader color="red" variant="dots" />
+          ) : (
+            "Check Docker Availability"
+          )}
+        </Button>
+
+        <Text fw={700}>Current Docker Status:</Text>
+
+        <Text size="lg">
+          {dockerReady
+            ? "Docker is ready to be used!"
+            : "Docker is not yet ready. Please click on the button!"}
+        </Text>
+      </Section>
     </div>
   );
 }
+
+const Section = ({
+  children,
+  ...props
+}: { children: React.ReactNode } & ContainerProps) => (
+  <Container mb="md" {...props}>
+    {children}
+  </Container>
+);
 
 export default App;

@@ -1,5 +1,6 @@
+import { useRouter } from "next/router";
 import Link from "next/link";
-import { ActionIcon, Group, Stack, Text } from "@mantine/core";
+import { ActionIcon, Group, Stack, Text, clsx } from "@mantine/core";
 import { Home, Layers, Table, Plus, Package } from "react-feather";
 import { Heading } from ".";
 
@@ -37,9 +38,18 @@ const pages = [
 ];
 
 export default function AppNavbar() {
+  const { pathname } = useRouter();
+
   const PageComponents = pages.map(({ title, href, color, icon: Icon }) => (
-    <Link key={title} href={href}>
-      <Group m="xs" sx={{ cursor: "pointer" }}>
+    <Link
+      key={title}
+      href={href}
+      className={clsx(
+        "cursor-pointer rounded-md",
+        pathname === href ? "bg-slate-700" : "hover:bg-slate-800"
+      )}
+    >
+      <Group m="xs">
         <ActionIcon color={color} variant="filled">
           <Icon size={20} />
         </ActionIcon>

@@ -3,44 +3,48 @@
     windows_subsystem = "windows"
 )]
 
+// sleep: std::thread::sleep(std::time::Duration::from_millis(4000));
+
 use std::env;
-use std::process::Command;
-use std::str;
+use docker_api::Docker;
 
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+enum CommandError {
+    DockerError(docker_api::Error)
+}
+
+impl serde::Serialize for CommandError {
+  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+  where S: serde::ser::Serializer, {
+    serializer.serialize_str(self.to_string().as_ref())
+  }
+}
+
+impl std::convert::From<docker_api::Error> for CommandError {
+    fn from(error: docker_api::Error) -> Self {
+        CommandError::DockerError(error)
+    }
+}
+
+impl std::fmt::Display for CommandError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            CommandError::DockerError(e) => write!(f, "Docker error: {}", e),
+        }
+    }
 }
 
 #[tauri::command]
-fn check_docker() -> bool {
-    let output = Command::new("docker").arg("--version").output().unwrap_or_else(|e| {
-        panic!("failed to execute process: {}", e)
-    });
+async fn check_docker() -> Result<Option<String>, CommandError> {
+    let docker = Docker::new("tcp://127.0.0.1:2375")?;
 
-    let output_str = str::from_utf8(&output.stdout).unwrap();
-    
-    output_str.contains("Docker version")
-}
+    let res = docker.version().await?;
 
-#[tauri::command]
-fn install_mysql_docker() -> String {
-    let pull_output = Command::new("docker").arg("pull").arg("mysql").output().unwrap_or_else(|e| {
-        panic!("failed to execute process: {}", e)
-    });
-
-    let pull_output_str = str::from_utf8(&pull_output.stdout).unwrap();
-
-    return pull_output_str.to_string();
-    //if pull_output_str.contains("") {
-     //   
-    //}
+    Ok(res.version)
 }
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, check_docker])
+        .invoke_handler(tauri::generate_handler![check_docker])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
