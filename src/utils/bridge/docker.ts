@@ -1,16 +1,9 @@
 import { invoke } from "@tauri-apps/api/tauri";
-
-interface CheckDockerResult {
-  success: boolean;
-  error?: string;
-  version?: string;
-}
+import { CheckDockerResult } from "@types";
 
 export async function checkDockerInstallation(): Promise<CheckDockerResult> {
   try {
-    const res: any = await invoke("check_docker");
-
-    //
+    const res: CheckDockerResult["version"] = await invoke("check_docker");
 
     return { success: true, version: res };
   } catch (err) {

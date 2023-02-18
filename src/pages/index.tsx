@@ -2,19 +2,17 @@ import { useState } from "react";
 import { open } from "@tauri-apps/api/shell";
 import {
   Button,
-  Center,
   Container,
   ContainerProps,
   List,
   Loader,
-  Stack,
   Text,
   Title,
 } from "@mantine/core";
 import { openConfirmModal, openModal } from "@mantine/modals";
 import { useDocker } from "@utils";
 
-function App() {
+export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [dockerReady, setDockerReady] = useState<boolean>(false);
   const { checkDocker } = useDocker();
@@ -120,13 +118,8 @@ function App() {
   );
 }
 
-const Section = ({
-  children,
-  ...props
-}: { children: React.ReactNode } & ContainerProps) => (
+const Section = ({ children, ...props }: ContainerProps) => (
   <Container mb="md" {...props}>
     {children}
   </Container>
 );
-
-export default App;
