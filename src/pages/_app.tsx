@@ -24,7 +24,9 @@ export default function App({ Component, pageProps }: AppProps) {
       >
         <ModalsProvider>
           <AppShell>
-            <Component {...pageProps} />
+            <div className="container">
+              <Component {...pageProps} />
+            </div>
           </AppShell>
         </ModalsProvider>
       </MantineProvider>

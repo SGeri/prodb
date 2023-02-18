@@ -2,11 +2,14 @@ import { useState } from "react";
 import { open } from "@tauri-apps/api/shell";
 import {
   Button,
+  Center,
   Container,
   ContainerProps,
+  Group,
   List,
   Loader,
   Text,
+  TextInput,
   Title,
 } from "@mantine/core";
 import { openConfirmModal, openModal } from "@mantine/modals";
@@ -15,6 +18,7 @@ import { useDocker } from "@utils";
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [dockerReady, setDockerReady] = useState<boolean>(false);
+  const [tcpHost, setTcpHost] = useState("tcp://127.0.0.1:2375");
   const { checkDocker } = useDocker();
 
   const checkInstallation = async () => {
@@ -46,16 +50,13 @@ export default function Dashboard() {
     openConfirmModal({
       title: "Install Docker?",
       children: (
-        <Text size="sm">
+        <Text>
           Docker cannot be found. Potential reasons:
-          <List withPadding>
+          <List withPadding mb="md" size="sm">
             <List.Item>Docker Daemon is not running.</List.Item>
             <List.Item>Docker cannot be found in PATH.</List.Item>
             <List.Item>
-              To start development server run npm start command
-            </List.Item>
-            <List.Item>
-              Docker has no exposed TCP port. (expose in settings!)
+              Docker has no exposed TCP port. (enable in settings)
             </List.Item>
             <List.Item>Docker is not installed.</List.Item>
           </List>
@@ -68,7 +69,7 @@ export default function Dashboard() {
     });
 
   return (
-    <div className="container">
+    <>
       <Section>
         <Title order={2} align="center" my="xl">
           Usage Guide
@@ -89,15 +90,27 @@ export default function Dashboard() {
           Docker is successfully installed and configured for ProDB, so that it
           can manage containers using it.
         </Text>
+
+        <Text mb="md">
+          The default configuration for Docker is to expose a TCP port on 2375.
+          After you enabled port exposure, please make sure to restart Docker
+          and click on the button below to check if Docker is ready to be used.
+        </Text>
       </Section>
 
       <Section>
+        <TextInput
+          placeholder="tcp://127.0.0.1:2375"
+          radius="md"
+          mb="xs"
+          value={tcpHost}
+          onChange={(v) => setTcpHost(v.target.value)}
+        />
         <Button
           size="md"
           mb="md"
           onClick={checkInstallation}
           disabled={loading}
-          fullWidth
         >
           {loading ? (
             <Loader color="red" variant="dots" />
@@ -114,7 +127,7 @@ export default function Dashboard() {
             : "Docker is not yet ready. Please click on the button!"}
         </Text>
       </Section>
-    </div>
+    </>
   );
 }
 

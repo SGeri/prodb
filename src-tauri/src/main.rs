@@ -13,10 +13,11 @@ mod commands {
     pub mod check_docker;
 }
 
+use tauri::{Builder};
 use commands::{check_docker::check_docker};
 
 fn main() {
-    tauri::Builder::default()
+    Builder::default()
         .invoke_handler(tauri::generate_handler![check_docker])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

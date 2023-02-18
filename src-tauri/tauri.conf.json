@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "tauri-next",
+    "productName": "prodb",
     "version": "0.0.0"
   },
   "tauri": {
@@ -62,7 +62,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "tauri-next",
+        "title": "prodb",
         "width": 800
       }
     ]

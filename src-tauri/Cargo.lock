@@ -2104,6 +2104,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "prodb"
+version = "0.0.0"
+dependencies = [
+ "docker-api",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+]
+
+[[package]]
 name = "quick-xml"
 version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2821,17 +2832,6 @@ dependencies = [
  "syn",
  "tauri-codegen",
  "tauri-utils",
-]
-
-[[package]]
-name = "tauri-next"
-version = "0.0.0"
-dependencies = [
- "docker-api",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
 ]
 
 [[package]]
