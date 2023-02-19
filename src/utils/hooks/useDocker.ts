@@ -1,13 +1,25 @@
-import { checkDockerInstallation } from "../bridge/docker";
+import { checkDockerInstallation, getLocalImages } from "../bridge/docker";
 
 export default function useDocker() {
-  const checkDocker = async () => {
-    const res = await checkDockerInstallation();
-
-    console.log("checkDocker", res);
-
-    return res;
+  const showError = (error: string) => {
+    console.error(error);
   };
 
-  return { checkDocker };
+  const checkDocker = async () => {
+    try {
+      return await checkDockerInstallation();
+    } catch (err) {
+      showError(err);
+    }
+  };
+
+  const getImages = async () => {
+    try {
+      return await getLocalImages();
+    } catch (err) {
+      showError(err);
+    }
+  };
+
+  return { checkDocker, getImages };
 }

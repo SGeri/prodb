@@ -42,6 +42,18 @@ const services: Service[] = [
 ];
 
 export default function Services() {
+  const onEdit = (container: string) => {
+    console.log("Edit", container);
+  };
+
+  const onInspect = (container: string) => {
+    console.log("Inspect", container);
+  };
+
+  const onRemove = (container: string) => {
+    console.log("Remove", container);
+  };
+
   return (
     <>
       <Title order={2} align="center" my="xl">
@@ -57,9 +69,9 @@ export default function Services() {
       {services.map((service) => (
         <ServicePreview
           key={service.container}
-          onEdit={() => {}}
-          onInspect={() => {}}
-          onRemove={() => {}}
+          onEdit={onEdit}
+          onInspect={onInspect}
+          onRemove={onRemove}
           {...service}
         />
       ))}

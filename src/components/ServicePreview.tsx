@@ -11,9 +11,9 @@ import {
 import { Service, ServiceStatus, ServiceType } from "@types";
 
 export interface ServicePreviewProps extends Service {
-  onInspect: () => void;
-  onEdit: () => void;
-  onRemove: () => void;
+  onInspect: (container: string) => void;
+  onEdit: (container: string) => void;
+  onRemove: (container: string) => void;
 }
 
 const getServiceImage = (type: ServiceType) => {
@@ -65,6 +65,10 @@ export default function ServicePreview({
   const { image, alt } = getServiceImage(service.type);
   const { status, color } = getFormattedStatus(service.status);
 
+  const handleClickInspect = () => onInspect(service.container);
+  const handleClickEdit = () => onEdit(service.container);
+  const handleClickRemove = () => onRemove(service.container);
+
   return (
     <Container
       className="flex flex-row bg-slate-900 rounded-2xl hover:bg-slate-800 shadow-lg items-center justify-between px-20"
@@ -87,13 +91,17 @@ export default function ServicePreview({
         </Text>
 
         <Group mt="md">
-          <ActionIcon color="blue" variant="filled" onClick={onInspect}>
+          <ActionIcon
+            color="blue"
+            variant="filled"
+            onClick={handleClickInspect}
+          >
             <Eye size={20} />
           </ActionIcon>
-          <ActionIcon color="orange" variant="filled" onClick={onEdit}>
+          <ActionIcon color="orange" variant="filled" onClick={handleClickEdit}>
             <Edit size={20} />
           </ActionIcon>
-          <ActionIcon color="red" variant="filled" onClick={onRemove}>
+          <ActionIcon color="red" variant="filled" onClick={handleClickRemove}>
             <Trash size={20} />
           </ActionIcon>
         </Group>

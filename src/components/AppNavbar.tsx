@@ -1,7 +1,15 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { ActionIcon, Group, Stack, Text, clsx } from "@mantine/core";
-import { Home, Layers, Table, Plus, Package, Settings } from "react-feather";
+import {
+  Home,
+  Layers,
+  Table,
+  Plus,
+  Package,
+  Settings,
+  Database,
+} from "react-feather";
 import { Heading } from ".";
 
 const pages = [
@@ -10,6 +18,12 @@ const pages = [
     href: "/",
     color: "violet",
     icon: Home,
+  },
+  {
+    title: "Local Images",
+    href: "/images",
+    color: "red",
+    icon: Database,
   },
   {
     title: "Your Services",
