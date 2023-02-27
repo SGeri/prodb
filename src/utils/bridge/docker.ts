@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import {
   BridgeCommands as BC,
-  CheckDockerResult,
+  GetVersionResult,
   GetLocalImagesResult,
 } from "@types";
 import { transformImages } from "@utils";
@@ -11,9 +11,9 @@ const catchError = (err) => ({
   error: err,
 });
 
-export async function checkDockerInstallation(): Promise<CheckDockerResult> {
+export async function checkDockerInstallation(): Promise<GetVersionResult> {
   try {
-    const res: CheckDockerResult["version"] = await invoke(BC.CheckDocker);
+    const res: GetVersionResult["version"] = await invoke(BC.GetVersion);
 
     return { success: true, version: res };
   } catch (err) {
@@ -26,6 +26,8 @@ export async function getLocalImages(): Promise<GetLocalImagesResult> {
     const images: GetLocalImagesResult["images"] = await invoke(
       BC.GetLocalImages
     );
+
+    console.log(images, transformImages(images));
 
     return {
       success: true,

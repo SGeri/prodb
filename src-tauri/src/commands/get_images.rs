@@ -1,4 +1,4 @@
-use docker_api::{models::ImageSummary, Docker};
+use docker_api::{Docker, models::ImageSummary};
 use crate::types::command_error::CommandError;
 
 #[tauri::command]

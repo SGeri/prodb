@@ -2,8 +2,8 @@
       BRIDGE TYPES
  * * * * * * * * * * * */
 export enum BridgeCommands {
-  CheckDocker = "check_docker",
-  GetLocalImages = "get_local_images",
+  GetVersion = "get_version",
+  GetLocalImages = "get_images",
 }
 
 type BridgeResult<T, K extends string> = {
@@ -11,7 +11,7 @@ type BridgeResult<T, K extends string> = {
   error?: string;
 } & { [P in K]?: T };
 
-export type CheckDockerResult = BridgeResult<string, "version">;
+export type GetVersionResult = BridgeResult<string, "version">;
 
 export type GetLocalImagesResult = BridgeResult<Image[], "images">;
 

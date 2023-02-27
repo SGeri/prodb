@@ -2,10 +2,8 @@ import { useState } from "react";
 import { open } from "@tauri-apps/api/shell";
 import {
   Button,
-  Center,
   Container,
   ContainerProps,
-  Group,
   List,
   Loader,
   Text,
@@ -13,17 +11,17 @@ import {
   Title,
 } from "@mantine/core";
 import { openConfirmModal, openModal } from "@mantine/modals";
-import { useDocker } from "@utils";
+import { useDocker } from "@stores";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [dockerReady, setDockerReady] = useState<boolean>(false);
-  const [tcpHost, setTcpHost] = useState("tcp://127.0.0.1:2375");
-  const { checkDocker } = useDocker();
+  const [tcpHost, setTcpHost] = useState("tcp://127.0.0.1:2375"); // implement it so that it has actual effect
+  const { getVersion } = useDocker();
 
   const checkInstallation = async () => {
     setLoading(true);
-    const { success, version, error } = await checkDocker();
+    const { success, error, version } = await getVersion();
 
     if (success) {
       openDockerInstalledModal(version);

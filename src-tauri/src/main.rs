@@ -10,16 +10,16 @@ mod types {
 }
 
 mod commands {
-    pub mod check_docker;
+    pub mod get_version;
     pub mod get_images;
 }
 
 use tauri::{Builder};
-use commands::{check_docker::check_docker, get_images::get_images};
+use commands::{get_version::get_version, get_images::get_images};
 
 fn main() {
     Builder::default()
-        .invoke_handler(tauri::generate_handler![check_docker, get_images])
+        .invoke_handler(tauri::generate_handler![get_version, get_images])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .expect("Error while running tauri application");
 }

@@ -1,17 +1,14 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Title } from "@mantine/core";
-import { useDocker } from "@utils";
+import { useDocker } from "@stores";
 
 export default function Services() {
-  const [images, setImages] = useState([]);
-  const { getImages } = useDocker();
+  const { images, fetchImages } = useDocker();
 
-  const getImages_ = async () => {
-    setImages((await getImages()).images);
-  };
+  console.log(images);
 
   useEffect(() => {
-    getImages_();
+    fetchImages();
   }, []);
 
   return (
@@ -19,6 +16,8 @@ export default function Services() {
       <Title order={2} align="center" my="xl">
         Local Images
       </Title>
+
+      {JSON.stringify(images)}
     </>
   );
 }
