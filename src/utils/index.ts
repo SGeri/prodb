@@ -1,21 +1,19 @@
 export * from "./hooks";
 
-import { camelCaseRegex } from "@constants";
 import { Image } from "@types";
 
 export function transformImages(rawImages: any[]) {
   const images: Image[] = rawImages.map((rawImage) => {
-    const imageMap = new Map();
+    const image = {};
 
-    for (const [key, value] of Object.entries(rawImage)) {
-      const camelCaseKey = key.replace(camelCaseRegex, (_, c) =>
-        c.toUpperCase()
-      );
+    Object.keys(rawImage).forEach((key) => {
+      const chars = key.split("");
+      const camelCaseKey = chars[0].toLowerCase() + chars.slice(1).join("");
 
-      imageMap.set(camelCaseKey, value);
-    }
+      image[camelCaseKey] = rawImage[key];
+    });
 
-    return Object.fromEntries(imageMap) as Image;
+    return image as Image;
   });
 
   return images;

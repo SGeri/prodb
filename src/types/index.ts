@@ -1,3 +1,5 @@
+import { Icon } from "react-feather";
+
 /* * * * * * * * * * * * 
       BRIDGE TYPES
  * * * * * * * * * * * */
@@ -46,3 +48,14 @@ export type Image = {
 };
 
 export type Container = {};
+
+/* * * * * * * * * * * * 
+      Client Types
+ * * * * * * * * * * * */
+export type NavbarElement = {
+  title: string;
+  href: string;
+  color: string;
+  icon: Icon;
+  disabled?: boolean;
+};

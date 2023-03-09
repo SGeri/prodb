@@ -11,8 +11,9 @@ import {
   Database,
 } from "react-feather";
 import { Heading } from ".";
+import { NavbarElement } from "@types";
 
-const pages = [
+const pages: NavbarElement[] = [
   {
     title: "Dashboard",
     href: "/",
@@ -43,41 +44,46 @@ const pages = [
     color: "grape",
     icon: Table,
   },
+  // Add billing & settings pages
   {
     title: "Billing & Usage",
     href: "/billing",
     color: "yellow",
     icon: Package,
+    disabled: true,
   },
   {
     title: "Settings",
     href: "/settings",
     color: "pink",
     icon: Settings,
+    disabled: true,
   },
 ];
 
 export default function AppNavbar() {
   const { pathname } = useRouter();
 
-  const PageComponents = pages.map(({ title, href, color, icon: Icon }) => (
-    <Link
-      key={title}
-      href={href}
-      className={clsx(
-        "cursor-pointer rounded-md",
-        pathname === href ? "bg-slate-700" : "hover:bg-slate-800"
-      )}
-    >
-      <Group m="xs">
-        <ActionIcon color={color} variant="filled">
-          <Icon size={20} />
-        </ActionIcon>
+  const PageComponents = pages
+    .filter(({ disabled }) => !disabled)
+    .map(({ title, href, color, icon: Icon, disabled }) => (
+      <Link
+        key={title}
+        href={href}
+        className={clsx(
+          "cursor-pointer rounded-md",
+          pathname === href ? "bg-slate-700" : "hover:bg-slate-800"
+        )}
+      >
+        <Group m="xs">
+          <ActionIcon color={color} variant="filled">
+            <Icon size={20} />
+          </ActionIcon>
 
-        <Text>{title}</Text>
-      </Group>
-    </Link>
-  ));
+          <Text>{title}</Text>
+        </Group>
+      </Link>
+    ));
 
   return (
     <>

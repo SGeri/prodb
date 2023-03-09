@@ -27,8 +27,6 @@ export async function getLocalImages(): Promise<GetLocalImagesResult> {
       BC.GetLocalImages
     );
 
-    console.log(images, transformImages(images));
-
     return {
       success: true,
       images: transformImages(images),
